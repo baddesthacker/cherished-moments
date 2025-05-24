@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ff69b4">
+    <meta charset="UTF-8">
+    <!-- Only one viewport tag needed -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home - Cherished Moments</title>
+
+    <!-- Combined CSS for mobile responsiveness and layout -->
+    <style>
+        /* Base styles */
+        body {
+            font-family: sans-serif;
+            background: #ffe6ec;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d63384;
+        }
+
+        /* Responsive upload form */
+        .upload-form {
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .upload-form input[type="file"] {
+            display: none;
+        }
+
+        .upload-box {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .upload-box:hover {
+            background: #f9f9f9;
+        }
+
+        /* Responsive gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .media-item {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: start;
+            transition: transform 0.2s;
+        }
+
+        .media-item:hover {
+            transform: scale(1.02);
+        }
+
+        .media-item img,
+        .media-item video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Responsive adjustments for small screens */
+        @media (max-width: 640px) {
+            .upload-form {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-box {
+                padding: 15px;
+                font-size: 14px;
+            }
+
+            .media-item {
+                margin: 10px 0;
+            }
+        }
+
+        /* Touch-friendly focus states */
+        button,
+        input,
+        label,
+        .upload-box {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        input:focus,
+        button:focus {
+            outline: 2px solid #ff69b4;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Our Memories 💕</h1>
+
+    <form method="post" enctype="multipart/form-data" class="upload-form">
+        <label class="upload-box">
+            Upload Image
+            <input type="file" name="image" accept="image/*" onchange="this.form.submit()">
+        </label>
+        <label class="upload-box">
+            Upload Video
+            <input type="file" name="video" accept="video/*" onchange="this.form.submit()">
+        </label>
+    </form>
+
+    <div class="gallery">
+        {% for item in saved_items %}
+        <div class="media-item">
+            {% if item.type == 'image' %}
+            <img src="{{ item.content }}" alt="{{ item.name }}">
+            {% else %}
+            <video controls>
+                <source src="{{ item.content }}" type="video/mp4">Your browser does not support the video tag.
+            </video>
+            {% endif %}
+            <p><strong>{{ item.name }}</strong><br><small>{{ item.date }}</small></p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <center><a href="/logout">Logout</a></center>
+</body>
+
+</html>
